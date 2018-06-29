@@ -6,24 +6,24 @@ INS_RE = r'(__)(.*?)__' # not slack ;-)
 STRONG_RE = r'(\*)(.*?)\*' # Bold in slack
 EMPH_RE = r'(_)(.*?)_' # Italics in slack
 CODE_RE = r'(`)(.*?)`' # code in slack
+PREFORMATTED_RE = r'(```)(.*?)```' # preformatted in slack
 
 class MyExtension(Extension):
-    def extendMarkdown(self, md, md_globals):
-        del_tag = SimpleTagPattern(DEL_RE, 'del')
-        md.inlinePatterns.add('del', del_tag, '>not_strong')
+  def extendMarkdown(self, md, md_globals):
+    # del md.inlinePatterns['backtick'] # `backtick style`
 
-        ins_tag = SimpleTagPattern(INS_RE, 'ins')
-        md.inlinePatterns.add('ins', ins_tag, '>del')
+    del_tag = SimpleTagPattern(DEL_RE, 'del')
+    md.inlinePatterns.add('del', del_tag, '>not_strong')
 
-        strong_tag = SimpleTagPattern(STRONG_RE, 'strong')
-        md.inlinePatterns['strong'] = strong_tag
+    ins_tag = SimpleTagPattern(INS_RE, 'ins')
+    md.inlinePatterns.add('ins', ins_tag, '>del')
 
-        emph_tag = SimpleTagPattern(EMPH_RE, 'em')
-        md.inlinePatterns['em'] = emph_tag
+    strong_tag = SimpleTagPattern(STRONG_RE, 'strong')
+    md.inlinePatterns['strong'] = strong_tag
 
-        code_tag = SimpleTagPattern(CODE_RE, 'code')
-        md.inlinePatterns['code'] = code_tag
+    emph_tag = SimpleTagPattern(EMPH_RE, 'em')
+    md.inlinePatterns.add('em', emph_tag, '>del')
 
-        del md.inlinePatterns['strong_em']
-        del md.inlinePatterns['em_strong']
-        del md.inlinePatterns['emphasis2']
+    # code_tag = SimpleTagPattern(CODE_RE, 'code')
+    # md.inlinePatterns['backtick'] = code_tag
+
