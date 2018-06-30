@@ -19,6 +19,12 @@ class TestStringMethods(unittest.TestCase):
   def test_code(self):
     self.assertEqual(convert_markdown('`code`'), '<p><code>code</code></p>')
 
+  def test_newline(self):
+    self.assertEqual(convert_markdown('somes before newline\n some after newline'), '<p>somes before newline<br />\n some after newline</p>')
+    self.assertEqual(convert_markdown('somes before newline \n some after newline'), '<p>somes before newline <br />\n some after newline</p>')
+    self.assertEqual(convert_markdown('somes before newline  \n some after newline'), '<p>somes before newline<br />\n some after newline</p>')
+    self.assertEqual(convert_markdown('somes before newline   \n some after newline'), '<p>somes before newline <br />\n some after newline</p>')
+
   # def test_preformatted(self):
   #   self.assertEqual(convert_markdown('```preformatted```'), '<p><code class="is-pre">preformatted</code></p>')
   

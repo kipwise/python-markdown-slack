@@ -10,3 +10,7 @@ txt = """
 
 result = markdown.markdown(txt, extensions=[MyExtension()])
 print(result)
+
+text_file = open("test.html", "w")
+text_file.write(result)
+text_file.close()
