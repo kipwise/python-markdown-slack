@@ -1,5 +1,9 @@
+# existing markdown inlinePatterns
+# https://github.com/Python-Markdown/markdown/blob/2.6/markdown/inlinepatterns.py
+
 from markdown.extensions import Extension
 from markdown.inlinepatterns import SimpleTagPattern
+from markdown.inlinepatterns import SubstituteTagPattern
 
 DEL_RE = r'(~)(.*?)~' # Strikeout in slack
 INS_RE = r'(__)(.*?)__' # not slack ;-)
@@ -7,6 +11,7 @@ STRONG_RE = r'(\*)(.*?)\*' # Bold in slack
 EMPH_RE = r'(_)(.*?)_' # Italics in slack
 CODE_RE = r'(`)(.*?)`' # code in slack
 PREFORMATTED_RE = r'(```)(.*?)```' # preformatted in slack
+NEWLINE_RE = r'\n' # newline in slack
 
 class MyExtension(Extension):
   def extendMarkdown(self, md, md_globals):
@@ -26,4 +31,7 @@ class MyExtension(Extension):
 
     # code_tag = SimpleTagPattern(CODE_RE, 'code')
     # md.inlinePatterns['backtick'] = code_tag
+
+    newline_tag = SubstituteTagPattern(NEWLINE_RE, 'br')
+    md.inlinePatterns.add('linebreak2', newline_tag, '>linebreak') 
 
