@@ -6,6 +6,7 @@ txt = """
 ... Some *bold*
 ... Some _italics_
 ... Some `import myextension`
+... the link: <https://github.com/wingleungchoi/myextension>
 ... """
 
 result = markdown.markdown(txt, extensions=[MyExtension()])

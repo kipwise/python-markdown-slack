@@ -25,6 +25,9 @@ class TestStringMethods(unittest.TestCase):
     self.assertEqual(convert_markdown('somes before newline  \n some after newline'), '<p>somes before newline<br />\n some after newline</p>')
     self.assertEqual(convert_markdown('somes before newline   \n some after newline'), '<p>somes before newline <br />\n some after newline</p>')
 
+  def test_links(self):
+    self.assertEqual(convert_markdown('the link: <https://github.com/wingleungchoi/myextension>'), '<p>the link: <a href="https://github.com/wingleungchoi/myextension">https://github.com/wingleungchoi/myextension</a></p>')
+
   # def test_preformatted(self):
   #   self.assertEqual(convert_markdown('```preformatted```'), '<p><code class="is-pre">preformatted</code></p>')
   
