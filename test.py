@@ -9,9 +9,11 @@ class TestStringMethods(unittest.TestCase):
 
   def test_strike(self):
     self.assertEqual(convert_markdown('~strike~'), '<p><del>strike</del></p>')
+    self.assertEqual(convert_markdown('this is ~strike~.'), '<p>this is <del>strike</del>.</p>')
 
   def test_bold(self):
     self.assertEqual(convert_markdown('*bold*'), '<p><strong>bold</strong></p>')
+    self.assertEqual(convert_markdown('*bold Title*foo'), '<p><strong>bold Title</strong>foo</p>')
 
   def test_italics(self):
     self.assertEqual(convert_markdown('_italics_'), '<p><em>italics</em></p>')
@@ -29,6 +31,12 @@ class TestStringMethods(unittest.TestCase):
     self.assertEqual(convert_markdown('the link: <https://github.com/wingleungchoi/myextension>'), '<p>the link: <a href="https://github.com/wingleungchoi/myextension">https://github.com/wingleungchoi/myextension</a></p>')
     # TODO is the link to image need to have image tag? if yes, how to? by options?
     self.assertEqual(convert_markdown('the link: <https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-02-15/316074573012_6e20e900d2366268a877_512.png>'), '<p>the link: <a href="https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-02-15/316074573012_6e20e900d2366268a877_512.png">https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-02-15/316074573012_6e20e900d2366268a877_512.png</a></p>')
+
+  def test_combinations(self):
+    self.assertEqual(convert_markdown("*_bold italics_*"), '<p><strong><em>bold italics</em></strong></p>')
+    self.assertEqual(convert_markdown("_*bold italics*_"), '<p><em><strong>bold italics</strong></em></p>')
+    self.assertEqual(convert_markdown('~*_bold italics strikeout_*~'), '<p><del><strong><em>bold italics strikeout</em></strong></del></p>')
+    self.assertEqual(convert_markdown('_*~bold italics strikeout~*_'), '<p><em><strong><del>bold italics strikeout</del></strong></em></p>')
 
   # def test_preformatted(self):
   #   self.assertEqual(convert_markdown('```preformatted```'), '<p><code class="is-pre">preformatted</code></p>')
