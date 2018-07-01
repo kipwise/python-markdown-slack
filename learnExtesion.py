@@ -9,6 +9,7 @@ txt = """
 ... website link: <https://github.com/wingleungchoi/myextension>
 ... image link: <https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-02-15/316074573012_6e20e900d2366268a877_512.png>
 ... combination: _*~bold italics strikeout~*_
+... usename: <@UBG4243ME> how is the project?
 ... """
 
 result = markdown.markdown(txt, extensions=[MyExtension()])

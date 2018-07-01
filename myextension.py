@@ -12,6 +12,16 @@ EMPH_RE = r'(_)(.*?)_' # Italics in slack
 CODE_RE = r'(`)(.*?)`' # code in slack
 PREFORMATTED_RE = r'(```)(.*?)```' # preformatted in slack
 NEWLINE_RE = r'\n' # newline in slack
+USERNAME_RE = r'(<@)(.*?)>' # username tag
+# NOIMG = r'(?<!\!)'
+# NOBRACKET = r'[^\]\[]*'
+# BRK = (
+#     r'\[(' +
+#     (NOBRACKET + r'(\[')*6 +
+#     (NOBRACKET + r'\])*')*6 +
+#     NOBRACKET + r')\]'
+# )
+# USERNAME_RE = NOIMG + BRK + r'''\(\s*(<.*?>|((?:(?:\(.*?\))|[^\(\)]))*?)\s*((['"])(.*?)\12\s*)?\)'''
 
 class MyExtension(Extension):
   def extendMarkdown(self, md, md_globals):
@@ -35,3 +45,5 @@ class MyExtension(Extension):
     newline_tag = SubstituteTagPattern(NEWLINE_RE, 'br')
     md.inlinePatterns.add('linebreak2', newline_tag, '>linebreak') 
 
+    username_tag = SimpleTagPattern(USERNAME_RE, 'span')
+    md.inlinePatterns.add('username', username_tag, '<link')
