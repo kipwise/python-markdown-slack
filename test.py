@@ -44,6 +44,11 @@ class TestStringMethods(unittest.TestCase):
     # self.assertEqual(convert_markdown('<@UBG4243ME>'), '<p><span>UBG4243ME</span></p>')
     self.assertEqual(convert_markdown('Hi <@UBG4243ME> how is the project?'), '<p>Hi <span>UBG4243ME</span> how is the project?</p>')
 
+  def test_channel(self):
+    self.assertEqual(convert_markdown('<#CBHSFG3T9|general>'), '<p><span>general</span></p>')
+    self.assertEqual(convert_markdown('<#|general>'), '<p>&lt;#|general&gt;</p>')
+    self.assertEqual(convert_markdown('channel: I refer to channel <#CBHSFG3T9|general>'), '<p>channel: I refer to channel <span>general</span></p>')
+
   # def test_preformatted(self):
   #   self.assertEqual(convert_markdown('```preformatted```'), '<p><code class="is-pre">preformatted</code></p>')
   

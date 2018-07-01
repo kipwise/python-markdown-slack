@@ -13,6 +13,7 @@ CODE_RE = r'(`)(.*?)`' # code in slack
 PREFORMATTED_RE = r'(```)(.*?)```' # preformatted in slack
 NEWLINE_RE = r'\n' # newline in slack
 USERNAME_RE = r'(<@)(.*?)>' # username tag
+CHANNEL_RE = r'(<#.+?\|)(.*?)>' # username tag
 
 class MyExtension(Extension):
   def extendMarkdown(self, md, md_globals):
@@ -38,3 +39,6 @@ class MyExtension(Extension):
 
     username_tag = SimpleTagPattern(USERNAME_RE, 'span')
     md.inlinePatterns.add('username', username_tag, '<link')
+
+    channel_tag = SimpleTagPattern(CHANNEL_RE, 'span')
+    md.inlinePatterns.add('channel', channel_tag, '<username')
