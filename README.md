@@ -8,3 +8,6 @@ Test script
 Reference: 
 - https://github.com/Python-Markdown/markdown/wiki/Tutorial:-Writing-Extensions-for-Python-Markdown
 - https://github.com/dkeeghan/slackformatter.js
+
+Powered By:
+-  kipwsie <https://kipwise.com/>

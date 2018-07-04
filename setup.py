@@ -1,7 +1,7 @@
 from setuptools import setup
 setup(
     name='myextension',
-    version='1.0',
+    version='0.1',
     py_modules=['myextension'],
     install_requires = ['markdown>=2.5'],
 )
