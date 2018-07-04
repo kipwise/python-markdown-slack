@@ -4,4 +4,5 @@ setup(
     version='0.1',
     py_modules=['python-markdown-slack'],
     install_requires = ['markdown>=2.5'],
+    license='MIT'
 )
