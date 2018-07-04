@@ -74,9 +74,9 @@ class TestStringMethods(unittest.TestCase):
 
   def test_preformatted(self):
     # TODO unexpected behaviour, \n shall not exist after convert
-    self.assertEqual(convert_markdown('```preformatted```'), '<p><preformatted>preformatted</preformatted></p>')
-    self.assertEqual(convert_markdown('```\npreformatted\n```'), '<p><preformatted>\npreformatted\n</preformatted></p>')
-    self.assertEqual(convert_markdown('preformatted: ```\npreformatted\n```'), '<p>preformatted: <preformatted>\npreformatted\n</preformatted></p>')
+    self.assertEqual(convert_markdown('```preformatted```'), '<p>\n<pre>preformatted</pre>\n</p>')
+    self.assertEqual(convert_markdown('```\npreformatted\n```'), '<p>\n<pre>\npreformatted\n</pre>\n</p>')
+    self.assertEqual(convert_markdown('preformatted: ```\npreformatted\n```'), '<p>preformatted: <pre>\npreformatted\n</pre>\n</p>')
   
   # def test_quote(self):
   #   self.assertEqual(convert_markdown('quote'), '')
