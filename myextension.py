@@ -18,6 +18,14 @@ USERNAME_RE = r'(<@)(.*?)>' # username tag
 CHANNEL_RE = r'(<#.+?\|)(.*?)>' # username tag
 
 class MyExtension(Extension):
+  def __init__(self, *args, **kwargs):
+    # Define config options and defaults
+    self.config = {
+      'data_for_replacing_text': ['it shall be a list', 'To provide data_for_replacing_text data']
+    }
+    # Call the parent class's __init__ method to configure options
+    super(MyExtension, self).__init__(*args, **kwargs)
+
   def extendMarkdown(self, md, md_globals):
     # del md.inlinePatterns['backtick'] # `backtick style`
 
@@ -39,8 +47,13 @@ class MyExtension(Extension):
     newline_tag = SubstituteTagPattern(NEWLINE_RE, 'br')
     md.inlinePatterns.add('linebreak2', newline_tag, '>linebreak') 
 
-    username_tag = SimpleTagPatternWithClassOptions(USERNAME_RE, 'span', 'username')
-    md.inlinePatterns.add('username', username_tag, '<link')
+    data_for_replacing_text = self.getConfig('data_for_replacing_text')
+    if isinstance(data_for_replacing_text, list):
+      username_tag = UsernameTagPatternWithClassOptions(USERNAME_RE, 'span', 'username', data_for_replacing_text)
+      md.inlinePatterns.add('username', username_tag, '<link')
+    else:
+      username_tag = SimpleTagPatternWithClassOptions(USERNAME_RE, 'span', 'username')
+      md.inlinePatterns.add('username', username_tag, '<link')
 
     channel_tag = SimpleTagPatternWithClassOptions(CHANNEL_RE, 'span', 'channel')
     md.inlinePatterns.add('channel', channel_tag, '<username')
@@ -60,3 +73,30 @@ class SimpleTagPatternWithClassOptions(Pattern):
         el.text = m.group(3)
         el.set('class', self.class_name_in_html)
         return el
+
+class UsernameTagPatternWithClassOptions(Pattern):
+    """
+    Return element of type `tag` with input text
+    of a Pattern.
+    """
+    def __init__(self, pattern, tag, class_name_in_html, data_for_replacing_text):
+        Pattern.__init__(self, pattern)
+        self.tag = tag
+        self.class_name_in_html = class_name_in_html
+        self.data_for_replacing_text = data_for_replacing_text
+
+    def handleMatch(self, m):
+        el = util.etree.Element(self.tag)
+        data_id = m.group(3)
+        user_name = self.get_user_name(self.data_for_replacing_text, data_id)
+        el.text = user_name
+        el.set('class', self.class_name_in_html)
+        return el
+
+    def get_user_name(self, data_for_replacing_text, data_id):
+      user_name = data_id
+      for datum_for_replacing_text in data_for_replacing_text:
+        if datum_for_replacing_text.get('data_id') == data_id:
+          datum_for_replacing_text_name = datum_for_replacing_text.get('text')
+          break
+      return datum_for_replacing_text_name
