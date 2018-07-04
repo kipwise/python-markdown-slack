@@ -1,3 +1,6 @@
+# python-markdown-slack
+slack markdown extension for Python-Markdown https://github.com/Python-Markdown/markdown
+
 Instructions
 - 1. python setup.py develop
 - 2. python learnExtension.py
@@ -10,4 +13,4 @@ Reference:
 - https://github.com/dkeeghan/slackformatter.js
 
 Powered By:
--  Kipwsie <https://kipwise.com/>
+-  Kipwsie <https://kipwise.com>
