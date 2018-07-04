@@ -41,13 +41,13 @@ class TestStringMethods(unittest.TestCase):
 
   def test_username(self):
     # TODO fix the following case as there '<@' is in the start of string
-    # self.assertEqual(convert_markdown('<@UBG4243ME>'), '<p><span>UBG4243ME</span></p>')
-    self.assertEqual(convert_markdown('Hi <@UBG4243ME> how is the project?'), '<p>Hi <span>UBG4243ME</span> how is the project?</p>')
+    # self.assertEqual(convert_markdown('<@UBG4243ME>'), '<p><span class="username">UBG4243ME</span></p>')
+    self.assertEqual(convert_markdown('Hi <@UBG4243ME> how is the project?'), '<p>Hi <span class="username">UBG4243ME</span> how is the project?</p>')
 
   def test_channel(self):
-    self.assertEqual(convert_markdown('<#CBHSFG3T9|general>'), '<p><span>general</span></p>')
+    self.assertEqual(convert_markdown('<#CBHSFG3T9|general>'), '<p><span class="channel">general</span></p>')
     self.assertEqual(convert_markdown('<#|general>'), '<p>&lt;#|general&gt;</p>')
-    self.assertEqual(convert_markdown('channel: I refer to channel <#CBHSFG3T9|general>'), '<p>channel: I refer to channel <span>general</span></p>')
+    self.assertEqual(convert_markdown('channel: I refer to channel <#CBHSFG3T9|general>'), '<p>channel: I refer to channel <span class="channel">general</span></p>')
 
   def test_preformatted(self):
     # TODO unexpected behaviour, \n shall not exist after convert
