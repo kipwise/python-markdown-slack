@@ -29,8 +29,8 @@ class TestStringMethods(unittest.TestCase):
     self.assertEqual(convert_markdown('`code`'), '<p><code>code</code></p>')
 
   def test_newline(self):
-    self.assertEqual(convert_markdown('somes before newline\n some after newline'), '<p>somes before newline<br />\n some after newline</p>')
-    self.assertEqual(convert_markdown('somes before newline \n some after newline'), '<p>somes before newline <br />\n some after newline</p>')
+    self.assertEqual(convert_markdown('somes before newline\n some after newline'), '<p>somes before newline\n some after newline</p>')
+    self.assertEqual(convert_markdown('somes before newline \n some after newline'), '<p>somes before newline \n some after newline</p>')
     self.assertEqual(convert_markdown('somes before newline  \n some after newline'), '<p>somes before newline<br />\n some after newline</p>')
     self.assertEqual(convert_markdown('somes before newline   \n some after newline'), '<p>somes before newline <br />\n some after newline</p>')
 
@@ -74,8 +74,9 @@ class TestStringMethods(unittest.TestCase):
 
   def test_preformatted(self):
     # TODO unexpected behaviour, \n shall not exist after convert
-    self.assertEqual(convert_markdown('```\npreformatted\n```'), '<p>\n<pre>preformatted</pre>\n</p>')
-    self.assertEqual(convert_markdown('preformatted: ```\npreformatted\n```'), '<p>preformatted: <pre>preformatted</pre>\n</p>')
+    self.assertEqual(convert_markdown('```preformatted```'), '<p>\n<pre>preformatted</pre>\n</p>')
+    self.assertEqual(convert_markdown('```\npreformatted\n```'), '<p>\n<pre>\npreformatted\n</pre>\n</p>')
+    self.assertEqual(convert_markdown('preformatted: ```\npreformatted\n```'), '<p>preformatted: <pre>\npreformatted\n</pre>\n</p>')
   
   # def test_quote(self):
   #   self.assertEqual(convert_markdown('quote'), '')
