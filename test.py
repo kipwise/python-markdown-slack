@@ -57,8 +57,10 @@ class TestStringMethods(unittest.TestCase):
 
   def test_channel(self):
     self.assertEqual(convert_markdown('<#CBHSFG3T9|general>'), '<p><span class="channel">general</span></p>')
-    self.assertEqual(convert_markdown('<#|general>'), '<p>&lt;#|general&gt;</p>')
+    self.assertEqual(convert_markdown('<#ChannelSlackId>'), '<p><span class="channel">ChannelSlackId</span></p>')
     self.assertEqual(convert_markdown('channel: I refer to channel <#CBHSFG3T9|general>'), '<p>channel: I refer to channel <span class="channel">general</span></p>')
+    # case: no channel name is returned.
+    self.assertEqual(convert_markdown('channel: I refer to channel <#CBHSFG3T9>'), '<p>channel: I refer to channel <span class="channel">CBHSFG3T9</span></p>')
 
   def test_preformatted(self):
     # TODO unexpected behaviour, \n shall not exist after convert
