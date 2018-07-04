@@ -10,7 +10,7 @@ INS_RE = r'(__)(.*?)__' # not slack ;-)
 STRONG_RE = r'(\*)(.*?)\*' # Bold in slack
 EMPH_RE = r'(_)(.*?)_' # Italics in slack
 CODE_RE = r'(`)(.*?)`' # code in slack
-PREFORMATTED_RE = r'(```)(.*?)```' # preformatted in slack
+PREFORMATTED_RE = r'(```\n)(.*?)\n```' # preformatted in slack
 NEWLINE_RE = r'\n' # newline in slack
 USERNAME_RE = r'(<@)(.*?)>' # username tag
 CHANNEL_RE = r'(<#.+?\|)(.*?)>' # username tag
@@ -31,8 +31,8 @@ class MyExtension(Extension):
     emph_tag = SimpleTagPattern(EMPH_RE, 'em')
     md.inlinePatterns.add('em', emph_tag, '>del')
 
-    # code_tag = SimpleTagPattern(CODE_RE, 'code')
-    # md.inlinePatterns['backtick'] = code_tag
+    preformatted_tag = SimpleTagPattern(PREFORMATTED_RE, 'pre')
+    md.inlinePatterns.add('preformatted', preformatted_tag, '<backtick')
 
     newline_tag = SubstituteTagPattern(NEWLINE_RE, 'br')
     md.inlinePatterns.add('linebreak2', newline_tag, '>linebreak') 

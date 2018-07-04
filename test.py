@@ -49,8 +49,10 @@ class TestStringMethods(unittest.TestCase):
     self.assertEqual(convert_markdown('<#|general>'), '<p>&lt;#|general&gt;</p>')
     self.assertEqual(convert_markdown('channel: I refer to channel <#CBHSFG3T9|general>'), '<p>channel: I refer to channel <span>general</span></p>')
 
-  # def test_preformatted(self):
-  #   self.assertEqual(convert_markdown('```preformatted```'), '<p><code class="is-pre">preformatted</code></p>')
+  def test_preformatted(self):
+    # TODO unexpected behaviour, \n shall not exist after convert
+    self.assertEqual(convert_markdown('```\npreformatted\n```'), '<p>\n<pre>preformatted</pre>\n</p>')
+    self.assertEqual(convert_markdown('preformatted: ```\npreformatted\n```'), '<p>preformatted: <pre>preformatted</pre>\n</p>')
   
   # def test_quote(self):
   #   self.assertEqual(convert_markdown('quote'), '')
