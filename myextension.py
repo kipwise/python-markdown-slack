@@ -2,8 +2,10 @@
 # https://github.com/Python-Markdown/markdown/blob/2.6/markdown/inlinepatterns.py
 
 from markdown.extensions import Extension
-from markdown.inlinepatterns import SimpleTagPattern
+from markdown.inlinepatterns import SimpleTagPattern, Pattern
 from markdown.inlinepatterns import SubstituteTagPattern
+from markdown.util import etree
+from markdown import util
 
 DEL_RE = r'(~)(.*?)~' # Strikeout in slack
 INS_RE = r'(__)(.*?)__' # not slack ;-)
@@ -37,8 +39,24 @@ class MyExtension(Extension):
     newline_tag = SubstituteTagPattern(NEWLINE_RE, 'br')
     md.inlinePatterns.add('linebreak2', newline_tag, '>linebreak') 
 
-    username_tag = SimpleTagPattern(USERNAME_RE, 'span')
+    username_tag = SimpleTagPatternWithClassOptions(USERNAME_RE, 'span', 'username')
     md.inlinePatterns.add('username', username_tag, '<link')
 
-    channel_tag = SimpleTagPattern(CHANNEL_RE, 'span')
+    channel_tag = SimpleTagPatternWithClassOptions(CHANNEL_RE, 'span', 'channel')
     md.inlinePatterns.add('channel', channel_tag, '<username')
+
+class SimpleTagPatternWithClassOptions(Pattern):
+    """
+    Return element of type `tag` with a text attribute of group(3)
+    of a Pattern.
+    """
+    def __init__(self, pattern, tag, class_name_in_html):
+        Pattern.__init__(self, pattern)
+        self.tag = tag
+        self.class_name_in_html = class_name_in_html
+
+    def handleMatch(self, m):
+        el = util.etree.Element(self.tag)
+        el.text = m.group(3)
+        el.set('class', self.class_name_in_html)
+        return el
