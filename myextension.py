@@ -97,6 +97,6 @@ class UsernameTagPatternWithClassOptions(Pattern):
       user_name = data_id
       for datum_for_replacing_text in data_for_replacing_text:
         if datum_for_replacing_text.get('data_id') == data_id:
-          datum_for_replacing_text_name = datum_for_replacing_text.get('name')
+          datum_for_replacing_text_name = datum_for_replacing_text.get('text')
           break
       return datum_for_replacing_text_name
