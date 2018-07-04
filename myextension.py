@@ -16,6 +16,7 @@ PREFORMATTED_RE = r'(```\n)(.*?)\n```' # preformatted in slack
 NEWLINE_RE = r'\n' # newline in slack
 USERNAME_RE = r'(<@)(.*?)>' # username tag
 CHANNEL_RE = r'(<#.+?\|)(.*?)>' # username tag
+CHANNEL_2_RE = r'(<#)(.*?)>' # username tag
 
 class MyExtension(Extension):
   def __init__(self, *args, **kwargs):
@@ -57,6 +58,9 @@ class MyExtension(Extension):
 
     channel_tag = SimpleTagPatternWithClassOptions(CHANNEL_RE, 'span', 'channel')
     md.inlinePatterns.add('channel', channel_tag, '<username')
+
+    channel_2_tag = SimpleTagPatternWithClassOptions(CHANNEL_2_RE, 'span', 'channel')
+    md.inlinePatterns.add('channel_2', channel_2_tag, '>channel')
 
 class SimpleTagPatternWithClassOptions(Pattern):
     """
