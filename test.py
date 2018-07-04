@@ -4,6 +4,8 @@ from myextension import MyExtension
 
 data_for_replacing_text = [{'data_id': 'UBG4243ME', 'text': 'John Doe'}]
 
+channel_data_for_replacing_text = [{'data_id': 'CBHSFG3T9', 'text': 'Random Channel'}]
+
 def convert_markdown(txt):
   return markdown.markdown(txt, extensions=[MyExtension()])
 
@@ -61,6 +63,14 @@ class TestStringMethods(unittest.TestCase):
     self.assertEqual(convert_markdown('channel: I refer to channel <#CBHSFG3T9|general>'), '<p>channel: I refer to channel <span class="channel">general</span></p>')
     # case: no channel name is returned.
     self.assertEqual(convert_markdown('channel: I refer to channel <#CBHSFG3T9>'), '<p>channel: I refer to channel <span class="channel">CBHSFG3T9</span></p>')
+
+  def test_channel(self):
+    # as channel_name i.e. genenral will be used CHANNEL_RE case, therefore return channel_name instead of data of in channel_data_for_replacing_text i.e. Random Channel
+    self.assertEqual(convert_markdown_with_options('<#CBHSFG3T9|general>', {'data_for_replacing_text': channel_data_for_replacing_text}), '<p><span class="channel">general</span></p>')
+    self.assertEqual(convert_markdown_with_options('<#ChannelSlackId>', {'data_for_replacing_text': channel_data_for_replacing_text}), '<p><span class="channel">ChannelSlackId</span></p>')
+    self.assertEqual(convert_markdown_with_options('channel: I refer to channel <#CBHSFG3T9|general>', {'data_for_replacing_text': channel_data_for_replacing_text}), '<p>channel: I refer to channel <span class="channel">general</span></p>')
+    # case: no channel name is returned.
+    self.assertEqual(convert_markdown_with_options('channel: I refer to channel <#CBHSFG3T9>', {'data_for_replacing_text': channel_data_for_replacing_text}), '<p>channel: I refer to channel <span class="channel">Random Channel</span></p>')
 
   def test_preformatted(self):
     # TODO unexpected behaviour, \n shall not exist after convert
