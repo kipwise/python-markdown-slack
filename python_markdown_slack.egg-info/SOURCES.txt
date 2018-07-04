@@ -1,0 +1,7 @@
+README.md
+setup.py
+python_markdown_slack.egg-info/PKG-INFO
+python_markdown_slack.egg-info/SOURCES.txt
+python_markdown_slack.egg-info/dependency_links.txt
+python_markdown_slack.egg-info/requires.txt
+python_markdown_slack.egg-info/top_level.txt

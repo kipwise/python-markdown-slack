@@ -18,14 +18,14 @@ USERNAME_RE = r'(<@)(.*?)>' # username tag
 CHANNEL_RE = r'(<#.+?\|)(.*?)>' # username tag
 CHANNEL_2_RE = r'(<#)(.*?)>' # username tag
 
-class MyExtension(Extension):
+class PythonMarkdownSlack(Extension):
   def __init__(self, *args, **kwargs):
     # Define config options and defaults
     self.config = {
       'data_for_replacing_text': ['it shall be a list', 'To provide data_for_replacing_text data']
     }
     # Call the parent class's __init__ method to configure options
-    super(MyExtension, self).__init__(*args, **kwargs)
+    super(PythonMarkdownSlack, self).__init__(*args, **kwargs)
 
   def extendMarkdown(self, md, md_globals):
     data_for_replacing_text = self.getConfig('data_for_replacing_text')

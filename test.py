@@ -1,16 +1,16 @@
 import unittest
 import markdown
-from myextension import MyExtension
+from python_markdown_slack import PythonMarkdownSlack
 
 data_for_replacing_text = [{'data_id': 'UBG4243ME', 'text': 'John Doe'}]
 
 channel_data_for_replacing_text = [{'data_id': 'CBHSFG3T9', 'text': 'Random Channel'}]
 
 def convert_markdown(txt):
-  return markdown.markdown(txt, extensions=[MyExtension()])
+  return markdown.markdown(txt, extensions=[PythonMarkdownSlack()])
 
 def convert_markdown_with_options(txt, opts):
-  return markdown.markdown(txt, extensions=[MyExtension(opts)])
+  return markdown.markdown(txt, extensions=[PythonMarkdownSlack(opts)])
 
 class TestStringMethods(unittest.TestCase):
 
@@ -35,8 +35,8 @@ class TestStringMethods(unittest.TestCase):
     self.assertEqual(convert_markdown('somes before newline   \n some after newline'), '<p>somes before newline <br />\n some after newline</p>')
 
   def test_links(self):
-    self.assertEqual(convert_markdown('<https://github.com/wingleungchoi/myextension>'), '<p><a href="https://github.com/wingleungchoi/myextension">https://github.com/wingleungchoi/myextension</a></p>')
-    self.assertEqual(convert_markdown('the link: <https://github.com/wingleungchoi/myextension>'), '<p>the link: <a href="https://github.com/wingleungchoi/myextension">https://github.com/wingleungchoi/myextension</a></p>')
+    self.assertEqual(convert_markdown('<https://github.com/wingleungchoi/python-markdown-slack>'), '<p><a href="https://github.com/wingleungchoi/python-markdown-slack">https://github.com/wingleungchoi/python-markdown-slack</a></p>')
+    self.assertEqual(convert_markdown('the link: <https://github.com/wingleungchoi/python-markdown-slack>'), '<p>the link: <a href="https://github.com/wingleungchoi/python-markdown-slack">https://github.com/wingleungchoi/python-markdown-slack</a></p>')
     # TODO is the link to image need to have image tag? if yes, how to? by options?
     self.assertEqual(convert_markdown('the link: <https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-02-15/316074573012_6e20e900d2366268a877_512.png>'), '<p>the link: <a href="https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-02-15/316074573012_6e20e900d2366268a877_512.png">https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-02-15/316074573012_6e20e900d2366268a877_512.png</a></p>')
 

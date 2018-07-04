@@ -1,7 +1,7 @@
-myextension.py
+python-markdown-slack.py
 setup.py
-myextension.egg-info/PKG-INFO
-myextension.egg-info/SOURCES.txt
-myextension.egg-info/dependency_links.txt
-myextension.egg-info/requires.txt
-myextension.egg-info/top_level.txt
+python-markdown-slack.egg-info/PKG-INFO
+python-markdown-slack.egg-info/SOURCES.txt
+python-markdown-slack.egg-info/dependency_links.txt
+python-markdown-slack.egg-info/requires.txt
+python-markdown-slack.egg-info/top_level.txt

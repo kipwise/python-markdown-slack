@@ -1,12 +1,12 @@
 import markdown
-from myextension import MyExtension
+from python_markdown_slack import PythonMarkdownSlack
 txt = """
 ... Some __underline__
 ... Some ~strike~
 ... Some *bold*
 ... Some _italics_
-... Some `import myextension`
-... website link: <https://github.com/wingleungchoi/myextension>
+... Some `import python-markdown-slack`
+... website link: <https://github.com/wingleungchoi/python-markdown-slack>
 ... image link: <https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-02-15/316074573012_6e20e900d2366268a877_512.png>
 ... combination: _*~bold italics strikeout~*_
 ... usename: <@UBG4243ME> how is the project?
@@ -16,7 +16,7 @@ txt = """
 ... preformatted: ```\nMy code goes here line 1\nMy code goes here line 2\nMy code goes here line 3\n```
 ... """
 
-result = markdown.markdown(txt, extensions=[MyExtension(), 'pymdownx.emoji'])
+result = markdown.markdown(txt, extensions=[PythonMarkdownSlack(), 'pymdownx.emoji'])
 print(result)
 
 text_file = open("test.html", "w")

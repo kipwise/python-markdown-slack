@@ -1,6 +1,6 @@
 Instructions
 - 1. python setup.py develop
-- 2. python learnExtesion.py
+- 2. python learnExtension.py
 
 Test script
 - python test.py
@@ -10,4 +10,4 @@ Reference:
 - https://github.com/dkeeghan/slackformatter.js
 
 Powered By:
--  kipwsie <https://kipwise.com/>
+-  Kipwsie <https://kipwise.com/>
