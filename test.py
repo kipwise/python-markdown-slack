@@ -47,15 +47,20 @@ class TestStringMethods(unittest.TestCase):
     self.assertEqual(convert_markdown('_*~bold italics strikeout~*_'), '<p><em><strong><del>bold italics strikeout</del></strong></em></p>')
 
   def test_username(self):
-    # TODO fix the following case as there '<@' is in the start of string
-    # self.assertEqual(convert_markdown('<@UBG4243ME>'), '<p><span class="username">UBG4243ME</span></p>')
+    self.assertEqual(convert_markdown(' <@UBG4243ME>'), '<p><span class="username">UBG4243ME</span></p>')
     self.assertEqual(convert_markdown('Hi <@UBG4243ME> how is the project?'), '<p>Hi <span class="username">UBG4243ME</span> how is the project?</p>')
+    # TODO fix the following case as there '<@' is in the start of string
+    # it might be related to https://github.com/Python-Markdown/markdown/blob/2.6/markdown/__init__.py#L383
+    # self.assertEqual(convert_markdown('<@UBG4243ME>'), '<p><span class="username">UBG4243ME</span></p>')
 
   def test_username_with_options(self):
-    # TODO fix the following case as there '<@' is in the start of string
-    # self.assertEqual(convert_markdown('<@UBG4243ME>'), '<p><span class="username">John Doe</span></p>')
+    self.assertEqual(convert_markdown_with_options(' <@UBG4243ME>', {'data_for_replacing_text': data_for_replacing_text}), '<p><span class="username">John Doe</span></p>')
+    self.assertEqual(convert_markdown_with_options(' <@UBG4243ME>: hello world', {'data_for_replacing_text': data_for_replacing_text}), '<p><span class="username">John Doe</span>: hello world</p>')
     # Warning in Markdonw of version 2.6 is not relevant. https://github.com/Python-Markdown/markdown/blob/2.6/markdown/extensions/__init__.py#L31
     self.assertEqual(convert_markdown_with_options('Hi <@UBG4243ME> how is the project?', {'data_for_replacing_text': data_for_replacing_text}), '<p>Hi <span class="username">John Doe</span> how is the project?</p>')
+    # TODO fix the following case as there '<@' is in the start of string
+    # self.assertEqual(convert_markdown_with_options('<@UBG4243ME>', {'data_for_replacing_text': data_for_replacing_text}), '<p><span class="username">John Doe</span></p>')
+    # self.assertEqual(convert_markdown_with_options('<@UBG4243ME>: hello world', {'data_for_replacing_text': data_for_replacing_text}), '<p><span class="username">John Doe</span>: hello world</p>')
 
   def test_channel(self):
     self.assertEqual(convert_markdown('<#CBHSFG3T9|general>'), '<p><span class="channel">general</span></p>')
