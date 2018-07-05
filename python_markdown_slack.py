@@ -2,7 +2,7 @@
 # https://github.com/Python-Markdown/markdown/blob/2.6/markdown/inlinepatterns.py
 
 from markdown.extensions import Extension
-from markdown.inlinepatterns import SimpleTagPattern, Pattern
+from markdown.inlinepatterns import AutolinkPattern, SimpleTagPattern, Pattern
 from markdown.inlinepatterns import SubstituteTagPattern
 from markdown.util import etree
 from markdown import util
@@ -17,6 +17,8 @@ PREFORMATTED_RE = r'(```)(.*?)```' # preformatted in slack
 USERNAME_RE = r'(<@)(.*?)>' # username tag
 CHANNEL_RE = r'(<#.+?\|)(.*?)>' # username tag
 CHANNEL_2_RE = r'(<#)(.*?)>' # username tag
+# <http://www.123.com|123>
+AUTOLINK_WITH_NAME_RE = r'<((?:[Ff]|[Hh][Tt])[Tt][Pp][Ss]?://[^>]*)\|(.*?)>'
 
 class PythonMarkdownSlack(Extension):
   def __init__(self, *args, **kwargs):
@@ -29,6 +31,9 @@ class PythonMarkdownSlack(Extension):
 
   def extendMarkdown(self, md, md_globals):
     data_for_replacing_text = self.getConfig('data_for_replacing_text')
+
+    autolink_with_name_tag = AutolinkWihtNamePattern(AUTOLINK_WITH_NAME_RE, md)
+    md.inlinePatterns.add('autolink_2', autolink_with_name_tag, '<autolink')
 
     del_tag = SimpleTagPattern(DEL_RE, 'del')
     md.inlinePatterns.add('del', del_tag, '>not_strong')
@@ -105,3 +110,10 @@ class SimpleTagPatternWithClassOptionsAndData(Pattern):
           datum_for_replacing_text_name = datum_for_replacing_text.get('text')
           break
       return datum_for_replacing_text_name
+
+class AutolinkWihtNamePattern(AutolinkPattern):
+    """ Return a link Element given an autolink (`<http://example/com|Please click>`). """
+    def handleMatch(self, m):
+        el = super(AutolinkWihtNamePattern, self).handleMatch(m)
+        el.text = util.AtomicString(m.group(3))
+        return el
