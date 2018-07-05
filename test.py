@@ -37,6 +37,7 @@ class TestStringMethods(unittest.TestCase):
   def test_links(self):
     self.assertEqual(convert_markdown('<https://github.com/wingleungchoi/python-markdown-slack>'), '<p><a href="https://github.com/wingleungchoi/python-markdown-slack">https://github.com/wingleungchoi/python-markdown-slack</a></p>')
     self.assertEqual(convert_markdown('the link: <https://github.com/wingleungchoi/python-markdown-slack>'), '<p>the link: <a href="https://github.com/wingleungchoi/python-markdown-slack">https://github.com/wingleungchoi/python-markdown-slack</a></p>')
+    self.assertEqual(convert_markdown('the link: <https://github.com/wingleungchoi/python-markdown-slack|Python Markdown Slack>'), '<p>the link: <a href="https://github.com/wingleungchoi/python-markdown-slack">Python Markdown Slack</a></p>')
     # TODO is the link to image need to have image tag? if yes, how to? by options?
     self.assertEqual(convert_markdown('the link: <https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-02-15/316074573012_6e20e900d2366268a877_512.png>'), '<p>the link: <a href="https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-02-15/316074573012_6e20e900d2366268a877_512.png">https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2018-02-15/316074573012_6e20e900d2366268a877_512.png</a></p>')
 
