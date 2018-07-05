@@ -2,7 +2,7 @@
 slack markdown extension for Python-Markdown https://github.com/Python-Markdown/markdown
 
 Installation
-- pip install -e git+git://github.com/wingleungchoi/python-markdown-slack.git#egg=python-markdown-slack
+- `$ pip install git+git://github.com/wingleungchoi/python-markdown-slack.git#egg=python-markdown-slack`
 - Try the following codes
 ```python
   import markdown
@@ -15,9 +15,9 @@ Test script
 - python test.py
 
 For development of the library
-- 1. git clone git@github.com:wingleungchoi/python-markdown-slack.git
-- 2. python setup.py develop
-- 3. python learnExtension.py
+- 1. `$ git clone git@github.com:wingleungchoi/python-markdown-slack.git`
+- 2. `$ python setup.py develop`
+- 3. `$ python learnExtension.py`
 
 Reference: 
 - https://github.com/Python-Markdown/markdown/wiki/Tutorial:-Writing-Extensions-for-Python-Markdown
