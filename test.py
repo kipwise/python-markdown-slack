@@ -83,7 +83,11 @@ class TestStringMethods(unittest.TestCase):
     self.assertEqual(convert_markdown('```preformatted```'), '<p>\n<pre>preformatted</pre>\n</p>')
     self.assertEqual(convert_markdown('```\npreformatted\n```'), '<p>\n<pre>\npreformatted\n</pre>\n</p>')
     self.assertEqual(convert_markdown('preformatted: ```\npreformatted\n```'), '<p>preformatted: <pre>\npreformatted\n</pre>\n</p>')
-  
+
+  def test_blockquote(self):
+    self.assertEqual(convert_markdown('>blockquote'), '<blockquote>\n<p>blockquote</p>\n</blockquote>')
+    self.assertEqual(convert_markdown('>>>blockquote'), '<blockquote>\n<p>blockquote</p>\n</blockquote>')
+
   # def test_quote(self):
   #   self.assertEqual(convert_markdown('quote'), '')
 

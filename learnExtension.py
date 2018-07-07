@@ -15,6 +15,8 @@ txt = """
 ... not channel: I don't refer to channel <#|general>
 ... emoji: at least two goods in slack. e.g. +1: :+1: thumb up:  :thumbsup:
 ... preformatted: ```\nMy code goes here line 1\nMy code goes here line 2\nMy code goes here line 3\n```
+> single blockquote >
+>>> triple blockquote >>>
 ... """
 
 result = markdown.markdown(txt, extensions=[PythonMarkdownSlack(), 'pymdownx.emoji'])

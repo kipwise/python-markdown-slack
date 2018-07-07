@@ -1,9 +1,10 @@
 # existing markdown inlinePatterns
 # https://github.com/Python-Markdown/markdown/blob/2.6/markdown/inlinepatterns.py
 
+import re
 from markdown.extensions import Extension
-from markdown.inlinepatterns import AutolinkPattern, SimpleTagPattern, Pattern
-from markdown.inlinepatterns import SubstituteTagPattern
+from markdown.inlinepatterns import AutolinkPattern, SimpleTagPattern, Pattern, SubstituteTagPattern
+from markdown.blockprocessors import BlockParser, BlockQuoteProcessor
 from markdown.util import etree
 from markdown import util
 
@@ -68,6 +69,12 @@ class PythonMarkdownSlack(Extension):
       channel_2_tag = SimpleTagPatternWithClassOptions(CHANNEL_2_RE, 'span', 'channel')
       md.inlinePatterns.add('channel_2', channel_2_tag, '>channel')
 
+    parser = md.parser
+    # md.blockprocessors['triplequote'] = BlockQuoteProcessor(parser)
+    triplequote_blockprocessor = TripeBlockQuoteProcessor(parser)
+    # parser.blockprocessors['quote'] = triplequote_blockprocessor
+    parser.blockprocessors.add('triplequote', triplequote_blockprocessor, '<quote')
+
 class SimpleTagPatternWithClassOptions(Pattern):
     """
     Return element of type `tag` with a text attribute of group(3)
@@ -117,3 +124,6 @@ class AutolinkWihtNamePattern(AutolinkPattern):
         el = super(AutolinkWihtNamePattern, self).handleMatch(m)
         el.text = util.AtomicString(m.group(3))
         return el
+
+class TripeBlockQuoteProcessor(BlockQuoteProcessor):
+  RE = re.compile(r'(^|\n)[ ]{0,3}>{3}[ ]?(.*)')
