@@ -7,10 +7,12 @@ data_for_replacing_text = [{'data_id': 'UBG4243ME', 'text': 'John Doe'}]
 channel_data_for_replacing_text = [{'data_id': 'CBHSFG3T9', 'text': 'Random Channel'}]
 
 def convert_markdown(txt):
-  return markdown.markdown(txt, extensions=[PythonMarkdownSlack()])
+  # return markdown.markdown(txt, extensions=[PythonMarkdownSlack()])
+  return markdown.markdown(txt, extensions=['python_markdown_slack:PythonMarkdownSlack'])
 
 def convert_markdown_with_options(txt, opts):
-  return markdown.markdown(txt, extensions=[PythonMarkdownSlack(opts)])
+  # return markdown.markdown(txt, extensions=[PythonMarkdownSlack(opts)])
+  return markdown.markdown(txt, extensions=['python_markdown_slack:PythonMarkdownSlack'], extension_configs={'python_markdown_slack:PythonMarkdownSlack': opts})
 
 class TestStringMethods(unittest.TestCase):
 
