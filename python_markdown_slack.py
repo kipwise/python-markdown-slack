@@ -1,5 +1,6 @@
 # existing markdown inlinePatterns
 # https://github.com/Python-Markdown/markdown/blob/2.6/markdown/inlinepatterns.py
+import re
 
 from markdown.extensions import Extension
 from markdown.inlinepatterns import AutolinkPattern, SimpleTagPattern, Pattern
@@ -20,6 +21,12 @@ CHANNEL_2_RE = r'(<#)(.*?)>' # username tag
 # <http://www.123.com|123>
 AUTOLINK_WITH_NAME_RE = r'<((?:[Ff]|[Hh][Tt])[Tt][Pp][Ss]?://[^>]*)\|(.*?)>'
 
+class SlackInlineTagPattern(SimpleTagPattern):
+  def __init__(self, pattern, tag):
+    super().__init__(pattern, tag)
+    self.compiled_re = re.compile("^(.*?(?:[^a-z0-9]|^))%s((?:[^a-z0-9]|$).*)$" % pattern,
+                                      re.DOTALL | re.UNICODE)
+
 class PythonMarkdownSlack(Extension):
   def __init__(self, *args, **kwargs):
     # Define config options and defaults
@@ -35,17 +42,17 @@ class PythonMarkdownSlack(Extension):
     autolink_with_name_tag = AutolinkWihtNamePattern(AUTOLINK_WITH_NAME_RE, md)
     md.inlinePatterns.add('autolink_2', autolink_with_name_tag, '<autolink')
 
-    del_tag = SimpleTagPattern(DEL_RE, 'del')
+    del_tag = SlackInlineTagPattern(DEL_RE, 'del')
     md.inlinePatterns.add('del', del_tag, '>not_strong')
 
     ins_tag = SimpleTagPattern(INS_RE, 'ins')
     md.inlinePatterns.add('ins', ins_tag, '>del')
 
-    strong_tag = SimpleTagPattern(STRONG_RE, 'strong')
+    strong_tag = SlackInlineTagPattern(STRONG_RE, 'strong')
     md.inlinePatterns['strong'] = strong_tag
 
-    emph_tag = SimpleTagPattern(EMPH_RE, 'em')
-    md.inlinePatterns.add('em', emph_tag, '>del')
+    emph_tag = SlackInlineTagPattern(EMPH_RE, 'em')
+    md.inlinePatterns['emphasis'] = emph_tag
 
     preformatted_tag = SimpleTagPattern(PREFORMATTED_RE, 'pre')
     md.inlinePatterns.add('preformatted', preformatted_tag, '<backtick')
