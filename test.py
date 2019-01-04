@@ -45,7 +45,6 @@ class TestStringMethods(unittest.TestCase):
     def test_code(self):
         self.assertEqual(convert_markdown('`code`'), '<p><code>code</code></p>')
 
-
     def test_links(self):
         self.assertEqual(convert_markdown('<https://github.com/wingleungchoi/python-markdown-slack>'),
                          '<p><a href="https://github.com/wingleungchoi/python-markdown-slack">https://github.com/wingleungchoi/python-markdown-slack</a></p>')
@@ -124,6 +123,24 @@ class TestStringMethods(unittest.TestCase):
 
         # def test_quote(self):
         #   self.assertEqual(convert_markdown('quote'), '')
+
+    def test_start_bracket_tag(self):
+        self.assertEqual(convert_markdown('Hello <Route>'), '<p>Hello &lt;Route&gt;</p>')
+
+    def test_close_bracket_tag(self):
+        self.assertEqual(convert_markdown('Hello <Link/>'), '<p>Hello &lt;Link/&gt;</p>')
+
+class TestListMethods(unittest.TestCase):
+
+    def test_ordered_list(self):
+        self.assertEqual(convert_markdown('1. item 1\n2. item 2\n3. item 3'),
+                         '<ol>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3</li>\n</ol>')
+
+    def test_unordered_list(self):
+        self.assertEqual(convert_markdown('- item 1\n- item 2\n- item 3'),
+                         '<ul>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3</li>\n</ul>')
+        self.assertEqual(convert_markdown('• item 1\n• item 2\n• item 3'),
+                         '<ul>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3</li>\n</ul>')
 
 
 if __name__ == '__main__':
