@@ -125,10 +125,11 @@ class TestStringMethods(unittest.TestCase):
         #   self.assertEqual(convert_markdown('quote'), '')
 
     def test_start_bracket_tag(self):
-        self.assertEqual(convert_markdown('Hello <Route>'), '<p>Hello &lt;Route&gt;</p>')
+        self.assertEqual(convert_markdown('Hello <Route>'), '<p>Hello <span>&lt;Route&gt;</span></p>')
 
     def test_close_bracket_tag(self):
-        self.assertEqual(convert_markdown('Hello <Link/>'), '<p>Hello &lt;Link/&gt;</p>')
+        self.assertEqual(convert_markdown('Hello <Link/>'), '<p>Hello <span>&lt;Link/&gt;</span></p>')
+
 
 class TestListMethods(unittest.TestCase):
 
