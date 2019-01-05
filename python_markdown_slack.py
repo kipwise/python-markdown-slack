@@ -4,8 +4,8 @@ import re
 
 from markdown.extensions import Extension
 from markdown.inlinepatterns import AutolinkPattern, SimpleTagPattern, Pattern
-from markdown.blockprocessors import OListProcessor
 from markdown import util
+from lib.list_handler import UListProcessor, OListProcessor
 
 DEL_RE = r'(~)(.*?)~' # Strikeout in slack
 INS_RE = r'(__)(.*?)__' # not slack ;-)
@@ -21,21 +21,6 @@ CHANNEL_2_RE = r'(<#)(.*?)>' # username tag
 AUTOLINK_WITH_NAME_RE = r'<((?:[Ff]|[Hh][Tt])[Tt][Pp][Ss]?://[^>]*)\|(.*?)>'
 XML_TAG_RE = r'(<)([0-9A-Za-z-_\/ ]+)>'
 
-
-class UListProcessor(OListProcessor):
-    """ Process unordered list blocks. """
-
-    TAG = 'ul'
-
-    def __init__(self, parser):
-        super(UListProcessor, self).__init__(parser)
-        # Detect an item (``1. item``). ``group(1)`` contains contents of item.
-        self.RE = re.compile(r'^[ ]{0,%d}[•*+-][ ]+(.*)' % (self.tab_length - 0))
-        self.CHILD_RE = re.compile(r'^[ ]{0,%d}((\d+\.)|[•*+-])[ ]+(.*)' %
-                                   (self.tab_length - 1))
-        # Detect indented (nested) items of either type
-        self.INDENT_RE = re.compile(r'^[ ]{%d,%d}((\d+\.)|[•*+-])[ ]+.*' %
-                                    (self.tab_length, self.tab_length * 2 - 1))
 
 class SlackInlineTagPattern(SimpleTagPattern):
   def __init__(self, pattern, tag):
@@ -77,6 +62,7 @@ class PythonMarkdownSlack(Extension):
     md.inlinePatterns.add('preformatted', preformatted_tag, '<backtick')
 
     md.parser.blockprocessors['ulist'] = UListProcessor(md.parser)
+    md.parser.blockprocessors['olist'] = OListProcessor(md.parser)
 
     if isinstance(data_for_replacing_text, list):
       username_tag = SimpleTagPatternWithClassOptionsAndData(USERNAME_RE, 'span', 'username', data_for_replacing_text)

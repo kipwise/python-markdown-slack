@@ -137,6 +137,22 @@ class TestListMethods(unittest.TestCase):
         self.assertEqual(convert_markdown('1. item 1\n2. item 2\n3. item 3'),
                          '<ol>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3</li>\n</ol>')
 
+    def test_ordered_list_right_after_the_line(self):
+        self.assertEqual(convert_markdown('Hello\nWorld\n1. item 1\n2. item 2\n3. item 3\nTesting'),
+                         '<p>Hello\nWorld</p>\n<ol>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3\nTesting</li>\n</ol>')
+
+    def test_ordered_list_in_different_blocks(self):
+        self.assertEqual(convert_markdown('Hello\nWorld\n\n1. item 1\n2. item 2\n3. item 3\nTesting'),
+                         '<p>Hello\nWorld</p>\n<ol>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3\nTesting</li>\n</ol>')
+
+    def test_unordered_list_right_after_the_line(self):
+        self.assertEqual(convert_markdown('Hello\nWorld\n- item 1\n- item 2\n- item 3\nhello'),
+                         '<p>Hello\nWorld</p>\n<ul>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3\nhello</li>\n</ul>')
+
+    def test_unordered_list_in_different_blocks(self):
+        self.assertEqual(convert_markdown('Hello\nWorld\n\n- item 1\n- item 2\n- item 3\nhello'),
+                         '<p>Hello\nWorld</p>\n<ul>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3\nhello</li>\n</ul>')
+
     def test_unordered_list(self):
         self.assertEqual(convert_markdown('- item 1\n- item 2\n- item 3'),
                          '<ul>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3</li>\n</ul>')
