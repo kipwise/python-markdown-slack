@@ -5,7 +5,7 @@ import re
 from markdown.extensions import Extension
 from markdown.inlinepatterns import AutolinkPattern, SimpleTagPattern, Pattern
 from markdown import util
-from .lib.list_handler import UListProcessor, OListProcessor
+from python_markdown_slack.list_handler import UListProcessor, OListProcessor
 
 DEL_RE = r'(~)(.*?)~' # Strikeout in slack
 INS_RE = r'(__)(.*?)__' # not slack ;-)
