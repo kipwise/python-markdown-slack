@@ -1,5 +1,4 @@
 README.md
-python_markdown_slack.py
 setup.py
 python_markdown_slack.egg-info/PKG-INFO
 python_markdown_slack.egg-info/SOURCES.txt
