@@ -1,5 +1,7 @@
 README.md
 setup.py
+python_markdown_slack/__init__.py
+python_markdown_slack/list_handler.py
 python_markdown_slack.egg-info/PKG-INFO
 python_markdown_slack.egg-info/SOURCES.txt
 python_markdown_slack.egg-info/dependency_links.txt

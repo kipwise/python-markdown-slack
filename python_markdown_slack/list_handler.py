@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 from markdown import util
 from markdown.blockprocessors import BlockProcessor
