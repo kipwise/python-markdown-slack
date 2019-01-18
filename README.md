@@ -24,4 +24,4 @@ Reference:
 - https://github.com/dkeeghan/slackformatter.js
 
 Powered By:
--  Kipwsie <https://kipwise.com>
+-  Kipwise <https://kipwise.com>
