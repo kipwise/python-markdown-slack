@@ -141,6 +141,18 @@ class TestListMethods(unittest.TestCase):
         self.assertEqual(convert_markdown('Hello\nWorld\n1. item 1\n2. item 2\n3. item 3\nTesting'),
                          '<p>Hello\nWorld</p>\n<ol>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3\nTesting</li>\n</ol>')
 
+    def test_multiple_ordered_list_with_numbers(self):
+        self.assertEqual(convert_markdown('Part 1 - testing\n1. item 1\n2. item 2\n3. item 3\nTesting'),
+                         '<p>Part 1 - testing</p>\n<ol>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3\nTesting</li>\n</ol>')
+
+    def test_multiple_ordered_list_right_after_the_line(self):
+        self.assertEqual(convert_markdown('Hello World\n1. item 1\n2. item 2\n3. item 3\n\nTesting\n1. item a\n2. item b\n3. item c\n- unknown item'),
+                         '<p>Hello World</p>\n<ol>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3</li>\n</ol>\n<p>Testing</p>\n<ol>\n<li>item a</li>\n<li>item b</li>\n<li>item c</li>\n<li>unknown item</li>\n</ol>')
+
+    def test_multiple_ordered_list_with_empty_lines_right_after_the_line(self):
+        self.assertEqual(convert_markdown('Hello World\n1. item 1\n2. item 2\n3. item 3\n\n1. item a\n2. item b\n3. item c\n- unknown item'),
+                         '<p>Hello World</p>\n<ol>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3</li>\n</ol>\n<ol>\n<li>item a</li>\n<li>item b</li>\n<li>item c</li>\n<li>unknown item</li>\n</ol>')
+
     def test_ordered_list_in_different_blocks(self):
         self.assertEqual(convert_markdown('Hello\nWorld\n\n1. item 1\n2. item 2\n3. item 3\nTesting'),
                          '<p>Hello\nWorld</p>\n<ol>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3\nTesting</li>\n</ol>')

@@ -19,7 +19,7 @@ class OListProcessor(BlockProcessor):
     def __init__(self, parser):
         super(OListProcessor, self).__init__(parser)
         # Detect an item (``1. item``). ``group(1)`` contains contents of item.
-        self.RE = re.compile(r'^.*?[\n\r]{0,2}[ ]{0,%d}\d+\.[ ]+(.*)' % (self.tab_length - 1), re.MULTILINE | re.DOTALL)
+        self.RE = re.compile(r'^.*?[\n\r]{1,2}[ ]{0,%d}\d+\.[ ]+(.*)' % (self.tab_length - 1), re.MULTILINE | re.DOTALL)
         # Detect items on secondary lines. they can be of either list type.
         self.CHILD_RE = re.compile(r'^[ ]{0,%d}((\d+\.)|[*+-])[ ]+(.*)' %
                                    (self.tab_length - 1))
@@ -34,36 +34,7 @@ class OListProcessor(BlockProcessor):
         # Check fr multiple items in one block.
         prevTextLines, items = self.get_items(blocks.pop(0))
 
-        sibling = self.lastChild(parent)
-
-        if sibling is not None and sibling.tag in self.SIBLING_TAGS:
-            # Previous block was a list item, so set that as parent
-            lst = sibling
-            # make sure previous item is in a p- if the item has text,
-            # then it isn't in a p
-            if lst[-1].text:
-                # since it's possible there are other children for this
-                # sibling, we can't just SubElement the p, we need to
-                # insert it as the first item.
-                p = util.etree.Element('p')
-                p.text = lst[-1].text
-                lst[-1].text = ''
-                lst[-1].insert(0, p)
-            # if the last item has a tail, then the tail needs to be put in a p
-            # likely only when a header is not followed by a blank line
-            lch = self.lastChild(lst[-1])
-            if lch is not None and lch.tail:
-                p = util.etree.SubElement(lst[-1], 'p')
-                p.text = lch.tail.lstrip()
-                lch.tail = ''
-
-            # parse first block differently as it gets wrapped in a p.
-            li = util.etree.SubElement(lst, 'li')
-            self.parser.state.set('looselist')
-            firstitem = items.pop(0)
-            self.parser.parseBlocks(li, [firstitem])
-            self.parser.state.reset()
-        elif parent.tag in ['ol', 'ul']:
+        if parent.tag in ['ol', 'ul']:
             # this catches the edge case of a multi-item indented list whose
             # first item is in a blank parent-list item:
             # * * subitem1
