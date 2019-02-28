@@ -15,6 +15,7 @@ CODE_RE = r'(`)(.*?)`' # code in slack
 PREFORMATTED_RE = r'(```)(.*?)```' # preformatted in slack
 # NEWLINE_RE = r'\n' # newline in slack
 USERNAME_RE = r'(<@)(.*?)>' # username tag
+USERNAME_WITH_NAME_RE = r'(<@.+?\|)(.*?)>' # username with name tag
 CHANNEL_RE = r'(<#.+?\|)(.*?)>' # username tag
 CHANNEL_2_RE = r'(<#)(.*?)>' # username tag
 # <http://www.123.com|123>
@@ -65,6 +66,8 @@ class PythonMarkdownSlack(Extension):
     md.parser.blockprocessors['olist'] = OListProcessor(md.parser)
 
     if isinstance(data_for_replacing_text, list):
+      username_with_name_tag = SimpleTagPatternWithClassOptionsAndData(USERNAME_WITH_NAME_RE, 'span', 'username', data_for_replacing_text)
+      md.inlinePatterns.add('username_with_name', username_with_name_tag, '<link')
       username_tag = SimpleTagPatternWithClassOptionsAndData(USERNAME_RE, 'span', 'username', data_for_replacing_text)
       md.inlinePatterns.add('username', username_tag, '<link')
       channel_tag = SimpleTagPatternWithClassOptionsAndData(CHANNEL_RE, 'span', 'channel', data_for_replacing_text)
@@ -72,6 +75,8 @@ class PythonMarkdownSlack(Extension):
       channel_2_tag = SimpleTagPatternWithClassOptionsAndData(CHANNEL_2_RE, 'span', 'channel', data_for_replacing_text)
       md.inlinePatterns.add('channel_2', channel_2_tag, '>channel')
     else:
+      username_tag = SimpleTagPatternWithClassOptions(USERNAME_WITH_NAME_RE, 'span', 'username')
+      md.inlinePatterns.add('username_with_name', username_tag, '<link')
       username_tag = SimpleTagPatternWithClassOptions(USERNAME_RE, 'span', 'username')
       md.inlinePatterns.add('username', username_tag, '<link')
       channel_tag = SimpleTagPatternWithClassOptions(CHANNEL_RE, 'span', 'channel')
