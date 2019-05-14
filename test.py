@@ -132,6 +132,16 @@ class TestStringMethods(unittest.TestCase):
     def test_close_bracket_tag(self):
         self.assertEqual(convert_markdown('Hello <Link/>'), '<p>Hello <span>&lt;Link/&gt;</span></p>')
 
+    def test_ping_here(self):
+        self.assertEqual(convert_markdown('Hello <!here>'), '<p>Hello <span class="here">@here</span></p>')
+
+    def test_ping_channel(self):
+        self.assertEqual(convert_markdown('Hello <!channel>'), '<p>Hello <span class="channel">@channel</span></p>')
+
+    def test_ping_user_group(self):
+        self.assertEqual(convert_markdown('Hello <!subteam^SHCNKB1EU|@engineering>'),
+                         '<p>Hello <span class="user_group">@engineering</span></p>')
+
 
 class TestListMethods(unittest.TestCase):
 

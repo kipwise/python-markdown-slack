@@ -2,109 +2,131 @@
 # https://github.com/Python-Markdown/markdown/blob/2.6/markdown/inlinepatterns.py
 import re
 
+from markdown import util
 from markdown.extensions import Extension
 from markdown.inlinepatterns import AutolinkPattern, SimpleTagPattern, Pattern
-from markdown import util
+
 from python_markdown_slack.list_handler import UListProcessor, OListProcessor
 
-DEL_RE = r'(~)(.*?)~' # Strikeout in slack
-INS_RE = r'(__)(.*?)__' # not slack ;-)
-STRONG_RE = r'(\*)(.*?)\*' # Bold in slack
-EMPH_RE = r'(_)(.*?)_' # Italics in slack
-CODE_RE = r'(`)(.*?)`' # code in slack
-PREFORMATTED_RE = r'(```)(.*?)```' # preformatted in slack
+DEL_RE = r'(~)(.*?)~'  # Strikeout in slack
+INS_RE = r'(__)(.*?)__'  # not slack ;-)
+STRONG_RE = r'(\*)(.*?)\*'  # Bold in slack
+EMPH_RE = r'(_)(.*?)_'  # Italics in slack
+CODE_RE = r'(`)(.*?)`'  # code in slack
+PREFORMATTED_RE = r'(```)(.*?)```'  # preformatted in slack
 # NEWLINE_RE = r'\n' # newline in slack
-USERNAME_RE = r'(<@)(.*?)>' # username tag
-USERNAME_WITH_NAME_RE = r'(<@.+?\|)(.*?)>' # username with name tag
-CHANNEL_RE = r'(<#.+?\|)(.*?)>' # username tag
-CHANNEL_2_RE = r'(<#)(.*?)>' # username tag
+USERNAME_RE = r'(<@)(.*?)>'  # username tag
+USERNAME_WITH_NAME_RE = r'(<@.+?\|)(.*?)>'  # username with name tag
+CHANNEL_RE = r'(<#.+?\|)(.*?)>'  # username tag
+CHANNEL_2_RE = r'(<#)(.*?)>'  # username tag
+PING_HERE_RE = r'(<)!(here)>'  # ping here tag
+PING_CHANNEL_RE = r'(<)!(channel)>'  # ping channel tag
+PING_USER_GROUP_RE = r'(<!.+?\|)(@.*?)>'  # ping user group tag
 # <http://www.123.com|123>
 AUTOLINK_WITH_NAME_RE = r'<((?:[Ff]|[Hh][Tt])[Tt][Pp][Ss]?://[^>]*)\|(.*?)>'
 XML_TAG_RE = r'(<)([0-9A-Za-z-_\/ ]+)>'
 
 
 class SlackInlineTagPattern(SimpleTagPattern):
-  def __init__(self, pattern, tag):
-    super().__init__(pattern, tag)
-    self.compiled_re = re.compile("^(.*?(?:[^a-z0-9]|^))%s((?:[^a-z0-9]|$).*)$" % pattern,
+    def __init__(self, pattern, tag):
+        super().__init__(pattern, tag)
+        self.compiled_re = re.compile("^(.*?(?:[^a-z0-9]|^))%s((?:[^a-z0-9]|$).*)$" % pattern,
                                       re.DOTALL | re.UNICODE)
 
+
 class PythonMarkdownSlack(Extension):
-  def __init__(self, *args, **kwargs):
-    # Define config options and defaults
-    self.config = {
-      'data_for_replacing_text': ['it shall be a list', 'To provide data_for_replacing_text data']
-    }
-    # Call the parent class's __init__ method to configure options
-    super(PythonMarkdownSlack, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        # Define config options and defaults
+        self.config = {
+            'data_for_replacing_text': ['it shall be a list', 'To provide data_for_replacing_text data']
+        }
+        # Call the parent class's __init__ method to configure options
+        super(PythonMarkdownSlack, self).__init__(*args, **kwargs)
 
-  def extendMarkdown(self, md, md_globals):
-    data_for_replacing_text = self.getConfig('data_for_replacing_text')
+    def extendMarkdown(self, md, md_globals):
+        data_for_replacing_text = self.getConfig('data_for_replacing_text')
 
-    autolink_with_name_tag = AutolinkWihtNamePattern(AUTOLINK_WITH_NAME_RE, md)
-    md.inlinePatterns.add('autolink_2', autolink_with_name_tag, '<autolink')
+        autolink_with_name_tag = AutolinkWihtNamePattern(AUTOLINK_WITH_NAME_RE, md)
+        md.inlinePatterns.add('autolink_2', autolink_with_name_tag, '<autolink')
 
-    escape_brackets = XmlTagPattern(XML_TAG_RE, 'span')
-    md.inlinePatterns.add('escape_brackets', escape_brackets, '>backtick')
+        escape_brackets = XmlTagPattern(XML_TAG_RE, 'span')
+        md.inlinePatterns.add('escape_brackets', escape_brackets, '>backtick')
 
-    del_tag = SlackInlineTagPattern(DEL_RE, 'del')
-    md.inlinePatterns.add('del', del_tag, '>not_strong')
+        del_tag = SlackInlineTagPattern(DEL_RE, 'del')
+        md.inlinePatterns.add('del', del_tag, '>not_strong')
 
-    ins_tag = SimpleTagPattern(INS_RE, 'ins')
-    md.inlinePatterns.add('ins', ins_tag, '>del')
+        ins_tag = SimpleTagPattern(INS_RE, 'ins')
+        md.inlinePatterns.add('ins', ins_tag, '>del')
 
-    strong_tag = SlackInlineTagPattern(STRONG_RE, 'strong')
-    md.inlinePatterns['strong'] = strong_tag
+        strong_tag = SlackInlineTagPattern(STRONG_RE, 'strong')
+        md.inlinePatterns['strong'] = strong_tag
 
-    emph_tag = SlackInlineTagPattern(EMPH_RE, 'em')
-    md.inlinePatterns['emphasis'] = emph_tag
+        emph_tag = SlackInlineTagPattern(EMPH_RE, 'em')
+        md.inlinePatterns['emphasis'] = emph_tag
 
-    preformatted_tag = SimpleTagPattern(PREFORMATTED_RE, 'pre')
-    md.inlinePatterns.add('preformatted', preformatted_tag, '<backtick')
+        ping_here_tag = SimpleTagPatternWithClassOptions(PING_HERE_RE, 'span', 'here', pre_text='@')
+        md.inlinePatterns.add('ping_here', ping_here_tag, '>del')
+        ping_channel_tag = SimpleTagPatternWithClassOptions(PING_CHANNEL_RE, 'span', 'channel', pre_text='@')
+        md.inlinePatterns.add('ping_channel', ping_channel_tag, '>ping_here')
+        ping_user_group_tag = SimpleTagPatternWithClassOptions(PING_USER_GROUP_RE, 'span', 'user_group')
+        md.inlinePatterns.add('ping_user_group', ping_user_group_tag, '>ping_channel')
 
-    md.parser.blockprocessors['ulist'] = UListProcessor(md.parser)
-    md.parser.blockprocessors['olist'] = OListProcessor(md.parser)
+        preformatted_tag = SimpleTagPattern(PREFORMATTED_RE, 'pre')
+        md.inlinePatterns.add('preformatted', preformatted_tag, '<backtick')
 
-    if isinstance(data_for_replacing_text, list):
-      username_with_name_tag = SimpleTagPatternWithClassOptionsAndData(USERNAME_WITH_NAME_RE, 'span', 'username', data_for_replacing_text)
-      md.inlinePatterns.add('username_with_name', username_with_name_tag, '<link')
-      username_tag = SimpleTagPatternWithClassOptionsAndData(USERNAME_RE, 'span', 'username', data_for_replacing_text)
-      md.inlinePatterns.add('username', username_tag, '<link')
-      channel_tag = SimpleTagPatternWithClassOptionsAndData(CHANNEL_RE, 'span', 'channel', data_for_replacing_text)
-      md.inlinePatterns.add('channel', channel_tag, '<username')
-      channel_2_tag = SimpleTagPatternWithClassOptionsAndData(CHANNEL_2_RE, 'span', 'channel', data_for_replacing_text)
-      md.inlinePatterns.add('channel_2', channel_2_tag, '>channel')
-    else:
-      username_tag = SimpleTagPatternWithClassOptions(USERNAME_WITH_NAME_RE, 'span', 'username')
-      md.inlinePatterns.add('username_with_name', username_tag, '<link')
-      username_tag = SimpleTagPatternWithClassOptions(USERNAME_RE, 'span', 'username')
-      md.inlinePatterns.add('username', username_tag, '<link')
-      channel_tag = SimpleTagPatternWithClassOptions(CHANNEL_RE, 'span', 'channel')
-      md.inlinePatterns.add('channel', channel_tag, '<username')
-      channel_2_tag = SimpleTagPatternWithClassOptions(CHANNEL_2_RE, 'span', 'channel')
-      md.inlinePatterns.add('channel_2', channel_2_tag, '>channel')
+        md.parser.blockprocessors['ulist'] = UListProcessor(md.parser)
+        md.parser.blockprocessors['olist'] = OListProcessor(md.parser)
+
+        if isinstance(data_for_replacing_text, list):
+            username_with_name_tag = SimpleTagPatternWithClassOptionsAndData(USERNAME_WITH_NAME_RE, 'span', 'username',
+                                                                             data_for_replacing_text)
+            md.inlinePatterns.add('username_with_name', username_with_name_tag, '<link')
+            username_tag = SimpleTagPatternWithClassOptionsAndData(USERNAME_RE, 'span', 'username',
+                                                                   data_for_replacing_text)
+            md.inlinePatterns.add('username', username_tag, '<link')
+            channel_tag = SimpleTagPatternWithClassOptionsAndData(CHANNEL_RE, 'span', 'channel',
+                                                                  data_for_replacing_text)
+            md.inlinePatterns.add('channel', channel_tag, '<username')
+            channel_2_tag = SimpleTagPatternWithClassOptionsAndData(CHANNEL_2_RE, 'span', 'channel',
+                                                                    data_for_replacing_text)
+            md.inlinePatterns.add('channel_2', channel_2_tag, '>channel')
+        else:
+            username_tag = SimpleTagPatternWithClassOptions(USERNAME_WITH_NAME_RE, 'span', 'username')
+            md.inlinePatterns.add('username_with_name', username_tag, '<link')
+            username_tag = SimpleTagPatternWithClassOptions(USERNAME_RE, 'span', 'username')
+            md.inlinePatterns.add('username', username_tag, '<link')
+            channel_tag = SimpleTagPatternWithClassOptions(CHANNEL_RE, 'span', 'channel')
+            md.inlinePatterns.add('channel', channel_tag, '<username')
+            channel_2_tag = SimpleTagPatternWithClassOptions(CHANNEL_2_RE, 'span', 'channel')
+            md.inlinePatterns.add('channel_2', channel_2_tag, '>channel')
+
 
 class SimpleTagPatternWithClassOptions(Pattern):
     """
     Return element of type `tag` with a text attribute of group(3)
     of a Pattern.
     """
-    def __init__(self, pattern, tag, class_name_in_html):
+
+    def __init__(self, pattern, tag, class_name_in_html, pre_text='', post_text=''):
         Pattern.__init__(self, pattern)
         self.tag = tag
         self.class_name_in_html = class_name_in_html
+        self.pre_text = pre_text
+        self.post_text = post_text
 
     def handleMatch(self, m):
         el = util.etree.Element(self.tag)
-        el.text = m.group(3)
+        el.text = self.pre_text + m.group(3) + self.post_text
         el.set('class', self.class_name_in_html)
         return el
+
 
 class SimpleTagPatternWithClassOptionsAndData(Pattern):
     """
     Return element of type `tag` with input text
     of a Pattern.
     """
+
     def __init__(self, pattern, tag, class_name_in_html, data_for_replacing_text):
         Pattern.__init__(self, pattern)
         self.tag = tag
@@ -120,16 +142,17 @@ class SimpleTagPatternWithClassOptionsAndData(Pattern):
         return el
 
     def get_datum_text(self, data_for_replacing_text, data_id):
-      datum_for_replacing_text_name = data_id
-      for datum_for_replacing_text in data_for_replacing_text:
-        if datum_for_replacing_text.get('data_id') == data_id:
-          datum_for_replacing_text_name = datum_for_replacing_text.get('text')
-          break
-      return datum_for_replacing_text_name
+        datum_for_replacing_text_name = data_id
+        for datum_for_replacing_text in data_for_replacing_text:
+            if datum_for_replacing_text.get('data_id') == data_id:
+                datum_for_replacing_text_name = datum_for_replacing_text.get('text')
+                break
+        return datum_for_replacing_text_name
 
 
 class AutolinkWihtNamePattern(AutolinkPattern):
     """ Return a link Element given an autolink (`<http://example/com|Please click>`). """
+
     def handleMatch(self, m):
         el = super(AutolinkWihtNamePattern, self).handleMatch(m)
         el.text = util.AtomicString(m.group(3))
