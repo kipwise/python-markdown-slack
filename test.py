@@ -131,16 +131,22 @@ class TestStringMethods(unittest.TestCase):
 
     def test_close_bracket_tag(self):
         self.assertEqual(convert_markdown('Hello <Link/>'), '<p>Hello <span>&lt;Link/&gt;</span></p>')
+        self.assertEqual(convert_markdown('<Link/> Hello'), '<p><span>&lt;Link/&gt;</span> Hello</p>')
 
     def test_ping_here(self):
+        self.assertEqual(convert_markdown(' <!here>'), '<p><span class="here">@here</span></p>')
         self.assertEqual(convert_markdown('Hello <!here>'), '<p>Hello <span class="here">@here</span></p>')
+        self.assertEqual(convert_markdown(' <!here> Hello!'), '<p><span class="here">@here</span> Hello!</p>')
 
     def test_ping_channel(self):
         self.assertEqual(convert_markdown('Hello <!channel>'), '<p>Hello <span class="channel">@channel</span></p>')
+        self.assertEqual(convert_markdown(' <!channel> Hello'), '<p><span class="channel">@channel</span> Hello</p>')
 
     def test_ping_user_group(self):
         self.assertEqual(convert_markdown('Hello <!subteam^SHCNKB1EU|@engineering>'),
                          '<p>Hello <span class="user_group">@engineering</span></p>')
+        self.assertEqual(convert_markdown(' <!subteam^SHCNKB1EU|@engineering> Hello'),
+                         '<p><span class="user_group">@engineering</span> Hello</p>')
 
 
 class TestListMethods(unittest.TestCase):
@@ -158,11 +164,13 @@ class TestListMethods(unittest.TestCase):
                          '<p>Part 1 - testing</p>\n<ol>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3\nTesting</li>\n</ol>')
 
     def test_multiple_ordered_list_right_after_the_line(self):
-        self.assertEqual(convert_markdown('Hello World\n1. item 1\n2. item 2\n3. item 3\n\nTesting\n1. item a\n2. item b\n3. item c\n- unknown item'),
+        self.assertEqual(convert_markdown(
+            'Hello World\n1. item 1\n2. item 2\n3. item 3\n\nTesting\n1. item a\n2. item b\n3. item c\n- unknown item'),
                          '<p>Hello World</p>\n<ol>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3</li>\n</ol>\n<p>Testing</p>\n<ol>\n<li>item a</li>\n<li>item b</li>\n<li>item c</li>\n<li>unknown item</li>\n</ol>')
 
     def test_multiple_ordered_list_with_empty_lines_right_after_the_line(self):
-        self.assertEqual(convert_markdown('Hello World\n1. item 1\n2. item 2\n3. item 3\n\n1. item a\n2. item b\n3. item c\n- unknown item'),
+        self.assertEqual(convert_markdown(
+            'Hello World\n1. item 1\n2. item 2\n3. item 3\n\n1. item a\n2. item b\n3. item c\n- unknown item'),
                          '<p>Hello World</p>\n<ol>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3</li>\n</ol>\n<ol>\n<li>item a</li>\n<li>item b</li>\n<li>item c</li>\n<li>unknown item</li>\n</ol>')
 
     def test_ordered_list_in_different_blocks(self):
@@ -182,6 +190,16 @@ class TestListMethods(unittest.TestCase):
                          '<ul>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3</li>\n</ul>')
         self.assertEqual(convert_markdown('• item 1\n• item 2\n• item 3'),
                          '<ul>\n<li>item 1</li>\n<li>item 2</li>\n<li>item 3</li>\n</ul>')
+
+    def test_nested_unordered_list(self):
+        #todo should be nested <ul> instead
+        self.assertEqual(convert_markdown('- item 1\n   - item 1.1\n- item 2'),
+                         '<ul>\n<li>item 1</li>\n<li>item 1.1</li>\n<li>item 2</li>\n</ul>')
+
+    def test_mixed_list(self):
+        self.assertEquals(convert_markdown(
+            '- Number of integrations (Guru, Slab)\n 1. Embed (youtube, vimeo, etc.'),
+                          '<ol>\n<li>Number of integrations (Guru, Slab)</li>\n<li>Embed (youtube, vimeo, etc.</li>\n</ol>')
 
 
 if __name__ == '__main__':

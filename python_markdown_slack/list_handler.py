@@ -72,22 +72,27 @@ class OListProcessor(BlockProcessor):
         prevTextLines = []
         for line in block.split('\n'):
             m = self.CHILD_RE.match(line)
-            if m:
+            if self.INDENT_RE.match(line):
+                # This is an indented (possibly nested) item.
+                if items[-1].startswith(' ' * self.tab_length):
+                    # Previous item was indented. Append to that item.
+                    items[-1] = '%s\n%s' % (items[-1], line)
+                else:
+                    items.append(line)
+            elif m:
                 # This is a new list item
                 # Check first item for the start index
                 if not items and self.TAG == 'ol':
                     # Detect the integer value of first list item
                     INTEGER_RE = re.compile('(\d+)')
-                    self.STARTSWITH = INTEGER_RE.match(m.group(1)).group()
+                    match = INTEGER_RE.match(m.group(1))
+                    if match:
+                        self.STARTSWITH = match.group()
+                    else:
+                        BULLET_RE = re.compile('([•*+-])')
+                        self.STARTSWITH = BULLET_RE.match(m.group(1)).group()
                 # Append to the list
                 items.append(m.group(3))
-            elif self.INDENT_RE.match(line):
-                # This is an indented (possibly nested) item.
-                if items[-1].startswith(' '*self.tab_length):
-                    # Previous item was indented. Append to that item.
-                    items[-1] = '%s\n%s' % (items[-1], line)
-                else:
-                    items.append(line)
             else:
                 # This is non list items
                 if len(items) > 0:

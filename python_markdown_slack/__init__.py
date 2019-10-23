@@ -65,7 +65,7 @@ class PythonMarkdownSlack(Extension):
         md.inlinePatterns['emphasis'] = emph_tag
 
         ping_here_tag = SimpleTagPatternWithClassOptions(PING_HERE_RE, 'span', 'here', pre_text='@')
-        md.inlinePatterns.add('ping_here', ping_here_tag, '>del')
+        md.inlinePatterns.add('ping_here', ping_here_tag, '>ins')
         ping_channel_tag = SimpleTagPatternWithClassOptions(PING_CHANNEL_RE, 'span', 'channel', pre_text='@')
         md.inlinePatterns.add('ping_channel', ping_channel_tag, '>ping_here')
         ping_user_group_tag = SimpleTagPatternWithClassOptions(PING_USER_GROUP_RE, 'span', 'user_group')
